@@ -1,0 +1,34 @@
+name: Test support
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: app_version
+        run: |
+          APP_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
+          echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
+      - id: flutter_version
+        run: |
+          FLUTTER_VERSION=$(cat .fvmrc | jq -r '.flutter')
+          echo "version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "gradle"
+          cache-dependency-path: |
+            android/gradle/wrapper/gradle-wrapper.properties
+            android/build.gradle
+            android/app/build.gradle
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.flutter_version.outputs.version }}
+          channel: stable
+      - run: sdkmanager "cmake;3.22.1"
+      - run: flutter doctor
