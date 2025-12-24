@@ -30,7 +30,6 @@ jobs:
         with:
           flutter-version: ${{ steps.flutter_version.outputs.version }}
           channel: stable
-      - run: sdkmanager "cmake;3.22.1"
       - run: flutter pub get && flutter build apk
       - run: mkdir arts && cp build/app/outputs/flutter-apk/*.apk arts/
       - uses: actions/upload-artifact@v4
