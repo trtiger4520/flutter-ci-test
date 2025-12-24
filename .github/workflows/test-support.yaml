@@ -30,5 +30,4 @@ jobs:
         with:
           flutter-version: ${{ steps.flutter_version.outputs.version }}
           channel: stable
-      - run: sdkmanager "cmake;3.22.1"
       - run: flutter doctor
