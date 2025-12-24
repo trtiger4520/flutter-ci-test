@@ -1,4 +1,4 @@
-name: Dart
+name: Build apk
 
 on:
   workflow_dispatch:
