@@ -12,10 +12,14 @@ jobs:
         run: |
           APP_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
           echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
+      - id: flutter_version
+        run: |
+          FLUTTER_VERSION=$(cat .fvmrc | jq -r '.flutter')
+          echo "version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.38.4
+          flutter-version: ${{ steps.app_version.outputs.flutter_version }}
           channel: stable
       - run: flutter pub get
       - run: flutter build apk
