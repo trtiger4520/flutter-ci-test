@@ -13,7 +13,7 @@ jobs:
           APP_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
           echo "app_version=$APP_VERSION" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@2.21.0
+      - uses: subosito/flutter-action@2
         with:
           flutter-version: 3.38.0
           channel: stable
