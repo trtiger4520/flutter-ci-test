@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
       - id: app_version
         run: |
           APP_VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')
@@ -16,11 +17,19 @@ jobs:
         run: |
           FLUTTER_VERSION=$(cat .fvmrc | jq -r '.flutter')
           echo "version=$FLUTTER_VERSION" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ steps.app_version.outputs.flutter_version }}
+          flutter-version: ${{ steps.flutter_version.outputs.version }}
           channel: stable
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "gradle"
+          cache-dependency-path: |
+            android/gradle/wrapper/gradle-wrapper.properties
+            android/build.gradle
+            android/app/build.gradle
       - run: flutter pub get
       - run: flutter build apk
       - run: |
@@ -31,4 +40,3 @@ jobs:
           name: app-v${{ steps.app_version.outputs.app_version }}
           path: arts/
           retention-days: 1
-          
